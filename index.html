@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>BotByte Refer & Earn</title>
+<script src="https://telegram.org/js/telegram-web-app.js?63"></script>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--text:#151922;--muted:#737b88;--line:#e4e7eb;--blue:#229ed9;--blue2:#0e8fc9;--green:#14a85a;--shadow:0 8px 28px rgba(18,31,48,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Roboto,Arial,sans-serif}.app{max-width:560px;margin:auto;padding:14px 16px 28px}
+button,input,select{font:inherit}.topbar{display:flex;align-items:center;justify-content:space-between;padding:3px 2px 15px}.profile{display:flex;gap:11px;align-items:center}.avatar{width:52px;height:52px;border-radius:18px;background:linear-gradient(135deg,#ff8b72,#f0c7bd);display:grid;place-items:center;color:#fff;font-size:20px;font-weight:900;position:relative;box-shadow:0 5px 15px #d7dbe0}.avatar i{position:absolute;right:-1px;bottom:1px;width:11px;height:11px;background:#18c36e;border:2px solid #fff;border-radius:50%}.name{font-size:19px;font-weight:900}.handle{font-size:12px;color:var(--muted);margin-top:3px}.circle{width:43px;height:43px;border:1px solid var(--line);background:#fff;border-radius:50%;font-size:23px;color:#5f6771}
+.page{display:none}.page.active{display:block}.hero{background:#fff;border:1px solid var(--line);border-radius:25px;padding:18px 18px 17px;box-shadow:var(--shadow)}.live{display:inline-flex;align-items:center;gap:7px;border:1px solid #a8ebc5;background:#edfff5;color:#139353;padding:8px 12px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:1.4px}.live span{width:7px;height:7px;background:#16c873;border-radius:50%}.balance-label{text-align:center;color:#7d858f;font-size:12px;font-weight:900;letter-spacing:2.5px;margin-top:22px}.balance{text-align:center;margin:1px 0 15px;line-height:1}.balance small{color:#16a86b;font-size:27px;font-weight:900;vertical-align:17px;margin-right:4px}.balance b{font-size:54px;letter-spacing:-2.5px}.withdraw-main,.blue-btn{width:100%;border:0;border-radius:16px;background:linear-gradient(135deg,#229ed9,#0b8bc2);color:#fff;padding:15px;font-weight:900;font-size:15px;box-shadow:0 8px 18px rgba(34,158,217,.18)}.payout-card{margin-top:12px;border:1px solid #e8ebee;background:#fafbfc;border-radius:17px;padding:12px;display:flex;align-items:center;gap:11px}.bank-icon{width:48px;height:48px;background:#fff;border:1px solid var(--line);border-radius:13px;display:grid;place-items:center;font-size:22px}.payout-copy{flex:1}.payout-copy small{display:block;color:#7b838c;font-size:10px;font-weight:900;letter-spacing:.5px}.payout-copy b{display:block;font-size:15px;margin-top:3px}.change{border:0;background:#eef1f3;color:#3e4650;border-radius:12px;padding:10px 13px;font-weight:900;font-size:12px}
+.fund-card{margin-top:12px;background:#fff;border:1px solid var(--line);border-radius:23px;padding:17px;box-shadow:var(--shadow)}.fund-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.fund-head>div{display:flex;align-items:center;gap:9px}.fund-head b{font-size:12px;letter-spacing:1.5px}.fund-head strong{font-size:10px;background:#edfff5;color:#139353;border-radius:999px;padding:8px 10px;white-space:nowrap}.fund-icon{width:38px;height:38px;border:1px solid #e8ecef;background:#f8fafb;border-radius:12px;display:grid;place-items:center}.bar{height:12px;background:#edf0f2;border-radius:99px;margin:17px 0 12px;overflow:hidden}.bar i{display:block;width:6%;height:100%;background:linear-gradient(90deg,#22c97a,#10a967);border-radius:99px;transition:width .4s}.fund-bottom{display:flex;justify-content:space-between;color:#7a828b;font-size:9px;font-weight:800;letter-spacing:1px}.fund-bottom b{display:block;color:#222831;font-size:14px;letter-spacing:0;margin-top:4px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.stat,.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow)}.stat span{font-size:21px}.stat small{display:block;color:var(--muted);font-size:10px;font-weight:900;letter-spacing:1px;margin-top:8px}.stat b{font-size:22px;display:block;margin-top:3px}.card{margin-bottom:11px}.section-head{display:flex;justify-content:space-between;align-items:center}.section-head b{font-size:16px}.section-head span{font-size:11px;color:var(--muted)}.card p{color:var(--muted);font-size:13px;line-height:1.5}.activity{margin-top:12px}.tx{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-size:12px}.tx:last-child{border:0}.tx b{color:var(--green)}.empty{padding:14px 0;color:var(--muted);font-size:12px}input,select{width:100%;border:1px solid var(--line);background:#fff;border-radius:13px;padding:13px;margin:8px 0 0;outline:0}input:focus,select:focus{border-color:var(--blue)}.msg{font-size:12px;color:var(--muted);min-height:18px;margin-top:7px}.gift,.rank{text-align:center;padding:30px 18px}.gift-icon,.trophy{font-size:52px}.gift h2,.rank h2{margin:12px 0 7px;font-size:28px}.gift-sub{color:#737b88;font-size:14px;line-height:1.5;margin:0 auto 22px;max-width:330px}.gift-box{background:#fafbfc;border:1px solid #e4e7eb;border-radius:20px;padding:17px;text-align:left}.gift-label{font-size:11px;font-weight:900;letter-spacing:1.5px;color:#68717d}.gift-input-row{display:grid;grid-template-columns:1fr 118px;gap:10px;align-items:center}.gift-input-row input{margin-top:9px}.claim-btn{background:#0ee36d;color:#071a10;border:0;border-radius:16px;padding:15px 12px;font-weight:1000;font-size:16px;margin-top:9px;box-shadow:0 10px 24px rgba(14,227,109,.18)}.how-card{text-align:left;margin-top:16px}.how-step{display:flex;gap:12px;align-items:flex-start;margin-top:14px}.how-num{min-width:32px;height:32px;border-radius:10px;background:#eafff2;color:#0aa85a;display:grid;place-items:center;font-weight:900}.how-step b{display:block;font-size:13px;line-height:1.5}.history-btn{width:100%;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px;font-weight:900;color:#3d4650}.refresh-btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 11px;font-weight:900;color:#4c5662}.payout-line{display:flex;align-items:center;gap:8px}.linked{color:#13824a}.not-linked{color:#a26b00}.history-item{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.history-item:last-child{border-bottom:0}.history-main b{display:block;font-size:13px}.history-main small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.history-amount{font-weight:900;white-space:nowrap}.history-amount.plus{color:var(--green)}.history-amount.minus{color:#c0392b}.redeem-success{position:fixed;inset:0;background:rgba(4,20,11,.68);display:none;place-items:center;z-index:20;padding:24px}.redeem-success.show{display:grid}.success-card{background:#fff;border-radius:28px;padding:28px;text-align:center;max-width:330px;width:100%;animation:pop .35s ease}.success-gift{font-size:62px;animation:bounce .7s ease}.success-card h3{margin:8px 0 5px;font-size:24px}.success-card p{color:var(--muted);margin:0 0 16px}.success-card button{border:0;background:#0ee36d;color:#071a10;border-radius:14px;padding:12px 20px;font-weight:900}@keyframes pop{0%{transform:scale(.75);opacity:0}100%{transform:scale(1);opacity:1}}@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}.rank-number{font-size:48px;font-weight:900;color:var(--blue)}.rank-row{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:13px 0;font-size:13px}.bottom-nav{position:sticky;bottom:8px;margin-top:15px;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:24px;padding:7px;display:grid;grid-template-columns:repeat(4,1fr);box-shadow:0 12px 30px rgba(20,30,40,.12)}.nav-btn{border:0;background:transparent;color:#737a84;border-radius:17px;padding:8px 3px;font-size:10px;font-weight:900;letter-spacing:1px}.nav-btn span{display:block;font-size:20px;line-height:22px;margin-bottom:3px}.nav-btn.active{background:#eef9fe;color:var(--blue2)}.leaderboard{margin-top:10px}.leader-row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:9px;padding:12px 0;border-bottom:1px solid var(--line);text-align:left}.leader-row:last-child{border-bottom:0}.leader-rank{width:30px;height:30px;border-radius:10px;background:#f0f5f8;display:grid;place-items:center;font-weight:900;font-size:12px}.leader-row:nth-child(1) .leader-rank{background:#fff4cf}.leader-row:nth-child(2) .leader-rank{background:#edf1f4}.leader-row:nth-child(3) .leader-rank{background:#f8e8dc}.leader-user{min-width:0}.leader-user b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.leader-user small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.leader-total{text-align:right}.leader-total b{display:block;color:var(--green);font-size:13px}.leader-total small{display:block;color:var(--muted);font-size:9px;margin-top:3px}.leader-empty{color:var(--muted);font-size:12px;padding:10px 0}.withdraw-status{margin-top:12px}.status-item{padding:13px 0;border-bottom:1px solid var(--line)}.status-item:last-child{border-bottom:0}.status-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.status-amount{font-weight:900;font-size:14px}.status-badge{padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.5px}.status-badge.pending{background:#fff7df;color:#a26b00}.status-badge.processing{background:#eef8ff;color:#1674a6}.status-badge.paid{background:#edfff5;color:#13824a}.status-badge.rejected{background:#fff0f0;color:#b42318}.status-meta{color:var(--muted);font-size:10px;margin-top:5px}
+.earn-item{padding:12px 0;border-bottom:1px solid var(--line)}.earn-item:last-child{border-bottom:0}.earn-item b{font-size:14px}.earn-item p{margin:5px 0;color:var(--muted);font-size:12px;white-space:pre-line}.earn-reward{font-size:11px;font-weight:800;color:var(--green)}.earn-link{display:inline-block;margin-top:7px;color:var(--blue);font-size:12px;font-weight:800;text-decoration:none}@media(max-width:360px){.balance b{font-size:47px}.app{padding-left:12px;padding-right:12px}}
+.hof{margin-top:10px}.hof-top{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:8px;align-items:end;margin:15px 0}.hof-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;text-align:center}.hof-card.main{padding:18px 10px}.hof-medal{font-size:26px}.hof-name{font-weight:900;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.hof-refs{font-size:24px;font-weight:900;color:#111;margin-top:4px}.hof-card.main .hof-refs{font-size:32px}.hof-label{font-size:9px;color:var(--muted);font-weight:900;letter-spacing:1px}.rank-wrap{background:#fff;border:1px solid var(--line);border-radius:20px;padding:15px}.rank-wrap h3{margin:0;font-size:14px}.rank-wrap p{margin:5px 0 10px}.leader-row{background:#fff}.leader-row:nth-child(1) .leader-rank,.leader-row:nth-child(2) .leader-rank,.leader-row:nth-child(3) .leader-rank{background:#f0f5f8}</style></head>
+
+<body>
+<div class="redeem-success" id="redeemSuccess">
+  <div class="success-card">
+    <div class="success-gift">🎁</div>
+    <h3>Gift Redeemed!</h3>
+    <p id="successText">Cash has been added to your balance.</p>
+    <button onclick="closeRedeemSuccess()">DONE</button>
+  </div>
+</div>
+<div class="app">
+  <header class="topbar">
+    <div class="profile">
+      <div class="avatar"><span id="initials">B</span><i></i></div>
+      <div><div class="name" id="userName">Loading...</div><div class="handle">BotByte Refer & Earn</div></div>
+    </div>
+    <button class="circle" onclick="load()">↻</button>
+  </header>
+
+  <main>
+    <section id="page-home" class="page active">
+      <div class="hero">
+        <div class="live"><span></span>SYSTEM LIVE</div>
+        <div class="balance-label">AVAILABLE BALANCE</div>
+        <div class="balance"><small>₹</small><b id="balance">0.00</b></div>
+        <button class="withdraw-main" onclick="setTab('earn');$('amount').focus()">WITHDRAW NOW ↗</button>
+        <div class="payout-card">
+          <div class="bank-icon" id="payoutIcon">🏦</div>
+          <div class="payout-copy"><small>LINKED PAYOUT METHOD</small><div class="payout-line"><b id="payoutPreview" class="not-linked">Not Linked</b></div></div>
+          <button class="refresh-btn" id="refreshPayout" title="Refresh payout method">↻</button>
+          <button class="change" onclick="setTab('earn')">CHANGE</button>
+        </div>
+        <div class="withdraw-status card" style="box-shadow:none;padding:13px;margin-top:12px">
+          <div class="section-head"><b>💸 Withdrawal Status</b><span>Live</span></div>
+          <div id="withdrawStatus"><div class="empty">No withdrawals yet.</div></div>
+        </div>
+      </div>
+
+      <div class="fund-card">
+        <div class="fund-head"><div><span class="fund-icon">⚡</span><b>YOUR EARNING PROGRESS</b></div><strong id="progressText">0 successful referrals</strong></div>
+        <div class="bar"><i id="progress"></i></div>
+        <div class="fund-bottom"><div>REFERRALS<b id="refs">0</b></div><div>REWARD<b>₹<span id="reward">3</span></b></div><div>MIN. WITHDRAW<b>₹<span id="min">20</span></b></div></div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span>👥</span><small>REFERRALS</small><b id="refs2">0</b></div>
+        <div class="stat"><span>💰</span><small>TOTAL EARNED</small><b>₹<span id="earned">0.00</span></b></div>
+      </div>
+
+      <div class="card leaderboard-card">
+        <div class="section-head"><b>🏆 Hall of Fame</b><span>Top Promoters</span></div>
+        <div id="hof" class="hof"><div class="empty">Loading leaderboard...</div></div>
+      </div>
+
+      <div class="activity card">
+        <div class="section-head"><b>Recent Activity</b><span>Live</span></div>
+        <div id="tx"></div>
+        <button class="history-btn" onclick="setTab('history');loadHistory()">📜 VIEW FULL HISTORY</button>
+      </div>
+    </section>
+
+    <section id="page-earn" class="page">
+      <div class="card">
+        <div class="section-head"><b>💸 Withdraw</b><span>Minimum ₹<span id="min2">20</span></span></div>
+        <p>Withdraw your available balance to your saved payout method.</p>
+        <input id="amount" type="number" min="20" step="1" placeholder="Enter amount">
+        <button class="blue-btn" id="withdraw">Request Withdrawal</button><div class="msg" id="wmsg"></div>
+      </div>
+      <div class="card">
+        <div class="section-head"><b>💕 Refer & Earn</b><span>₹<span id="reward2">3</span> / referral</span></div>
+        <p>Invite friends and earn ₹<span id="reward3">3</span> for every successful referral.</p>
+        <input id="ref" readonly>
+        <button class="blue-btn" id="share">📤 SHARE REFERRAL LINK</button>
+      </div>
+      <div class="card">
+        <div class="section-head"><b>🤑 Earn More</b><span>Tasks & Messages</span></div>
+        <div id="earnMoreItems"><div class="empty">Loading earning tasks...</div></div>
+      </div>
+      <div class="card">
+        <div class="section-head"><b>🏦 Payout Method</b><span>Secure</span></div>
+        <select id="method"><option value="UPI">UPI</option><option value="Bank">Bank</option></select>
+        <input id="payout" placeholder="UPI ID / payout details">
+        <button class="blue-btn" id="savePayout">SAVE PAYOUT METHOD</button><div class="msg" id="pmsg"></div>
+      </div>
+    </section>
+
+    <section id="page-gift" class="page">
+      <div class="card gift">
+        <div class="gift-icon">🎁</div>
+        <h2>Redeem Gift Code</h2>
+        <p class="gift-sub">Enter your code below to get<br>instant cashback in your account</p>
+        <div class="gift-box">
+          <div class="gift-label">GIFT CODE</div>
+          <div class="gift-input-row">
+            <input id="code" placeholder="e.g. FASTIFYGIFT" autocomplete="off">
+            <button class="claim-btn" id="redeem">CLAIM</button>
+          </div>
+          <div class="msg" id="gmsg"></div>
+        </div>
+        <div class="card how-card">
+          <div class="section-head"><b>HOW IT WORKS</b></div>
+          <div class="how-step"><div class="how-num">1</div><b>Get a gift code from our Telegram channel<br>or special events</b></div>
+          <div class="how-step"><div class="how-num">2</div><b>Enter the code above and tap CLAIM</b></div>
+          <div class="how-step"><div class="how-num">3</div><b>Cash is instantly added to your account<br>withdraw anytime!</b></div>
+        </div>
+      </div>
+    </section>
+    <section id="page-history" class="page">
+      <div class="card">
+        <div class="section-head"><b>📜 History</b><button class="refresh-btn" onclick="loadHistory()">↻ Refresh</button></div>
+        <p>Your complete account activity.</p>
+        <div id="historyList"><div class="empty">Loading history...</div></div>
+      </div>
+    </section>
+
+    <section id="page-rank" class="page">
+      <div class="card rank">
+        <div class="trophy">🏆</div><h2>Hall of Fame</h2><p>Top promoters ranked by successful referrals.</p>
+        <div id="leaderboardRank" class="leaderboard"><div class="empty">Loading leaderboard...</div></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-tab="home"><span>⌂</span>HOME</button>
+    <button class="nav-btn" data-tab="earn"><span>↗</span>EARN</button>
+    <button class="nav-btn" data-tab="gift"><span>🎁</span>GIFT</button>
+    <button class="nav-btn" data-tab="rank"><span>🏆</span>RANK</button>
+  </nav>
+</div>
+
+<script>
+const tg=window.Telegram?.WebApp;
+tg?.ready(); tg?.expand();
+const headers=()=>({'Content-Type':'application/json','X-Telegram-Init-Data':tg?.initData||''});
+const $=id=>document.getElementById(id);
+let DATA={};
+
+function setTab(tab){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+  $('page-'+tab)?.classList.add('active');
+  document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+}
+async function loadLeaderboard(){
+  try{
+    const r=await fetch('/api/leaderboard',{cache:'no-store'});
+    const d=await r.json();
+    if(!r.ok) throw new Error(d.detail||'failed');
+    const items=d.leaderboard||[];
+    const safe=v=>escapeHtml(v);
+    if(!items.length){
+      $('hof').innerHTML='<div class="leader-empty">No referrals yet.</div>';
+      $('leaderboardRank').innerHTML='<div class="leader-empty">No referrals yet.</div>';
+      return;
+    }
+    const top=items.slice(0,3);
+    const order=[top[1],top[0],top[2]].filter(Boolean);
+    $('hof').innerHTML='<div class="hof-top">'+order.map((x,i)=>`<div class="hof-card ${x===top[0]?'main':''}"><div class="hof-medal">${x===top[0]?'👑':i===0?'🥈':'🥉'}</div><div class="hof-name">${safe(x.user)}</div><div class="hof-refs">${x.referrals}</div><div class="hof-label">INVITES</div></div>`).join('')+'</div><div class="rank-wrap"><h3>Rank · Invites</h3>'+items.slice(0,20).map((x,i)=>`<div class="leader-row"><div class="leader-rank">#${i+1}</div><div class="leader-user"><b>${safe(x.user)}</b><small>💸 ₹${Number(x.total_withdrawal||0).toFixed(2)} withdrawn</small></div><div class="leader-total"><b>${x.referrals}</b><small>REFERS</small></div></div>`).join('')+'</div>';
+    $('leaderboardRank').innerHTML=items.slice(0,20).map((x,i)=>`<div class="leader-row"><div class="leader-rank">#${i+1}</div><div class="leader-user"><b>${safe(x.user)}</b><small>💸 ₹${Number(x.total_withdrawal||0).toFixed(2)} withdrawn</small></div><div class="leader-total"><b>${x.referrals}</b><small>REFERS</small></div></div>`).join('');
+  }catch(e){
+    $('hof').innerHTML='<div class="leader-empty">Leaderboard unavailable. Please reopen the Mini App.</div>';
+    $('leaderboardRank').innerHTML='<div class="leader-empty">Leaderboard unavailable. Please reopen the Mini App.</div>';
+  }
+}
+
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+function payoutText(method,value){
+  if(!value) return {text:'Not Linked', cls:'not-linked', icon:'🏦'};
+  const m=String(method||'UPI').toUpperCase();
+  return {text:m+' / '+String(value), cls:'linked', icon:m==='BANK'?'🏦':'💳'};
+}
+function formatDate(ts){
+  if(!ts) return '';
+  try{return new Date(Number(ts)*1000).toLocaleString([], {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}
+}
+async function loadHistory(){
+  const box=$('historyList'); if(!box)return;
+  box.innerHTML='<div class="empty">Loading history...</div>';
+  try{
+    const r=await fetch('/api/history',{headers:headers()});
+    const d=await r.json(); if(!r.ok)throw new Error(d.detail||'Failed');
+    const rows=d.history||[];
+    box.innerHTML=rows.length?rows.map(x=>{
+      const plus=Number(x.amount)>=0;
+      return `<div class="history-item"><div class="history-main"><b>${escapeHtml(x.type)}</b><small>${escapeHtml(x.note||'')} · ${formatDate(x.created_at)}</small></div><div class="history-amount ${plus?'plus':'minus'}">${plus?'+':''}₹${Math.abs(Number(x.amount)).toFixed(2)}</div></div>`;
+    }).join(''):'<div class="empty">No activity yet.</div>';
+  }catch(e){box.innerHTML='<div class="empty">History unavailable. Please try again.</div>';}
+}
+function playRedeemSound(){
+  try{
+    const C=window.AudioContext||window.webkitAudioContext; if(!C)return;
+    const c=new C(),o=c.createOscillator(),g=c.createGain();
+    o.type='sine';o.frequency.setValueAtTime(660,c.currentTime);o.frequency.exponentialRampToValueAtTime(990,c.currentTime+.16);
+    g.gain.setValueAtTime(.0001,c.currentTime);g.gain.exponentialRampToValueAtTime(.12,c.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+.28);
+    o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.3);
+  }catch(e){}
+}
+function showRedeemSuccess(amount){
+  $('successText').textContent=`₹${Number(amount).toFixed(2)} has been added to your balance.`;
+  $('redeemSuccess').classList.add('show');
+  playRedeemSound();
+  tg?.HapticFeedback?.notificationOccurred('success');
+}
+function closeRedeemSuccess(){$('redeemSuccess').classList.remove('show');}
+async function loadEarnMore(){
+  try{
+    const r=await fetch('/api/earn-more',{headers:headers()});
+    const d=await r.json();
+    if(!r.ok) throw new Error('failed');
+    const items=d.items||[];
+    $('earnMoreItems').innerHTML=items.length?items.map(x=>{
+      const link=x.url?`<a class="earn-link" href="${escapeHtml(x.url)}" target="_blank">🔗 Open task</a>`:'';
+      const reward=Number(x.reward)>0?`<div class="earn-reward">💰 Reward: ₹${Number(x.reward).toFixed(2)}</div>`:'';
+      return `<div class="earn-item"><b>${escapeHtml(x.title)}</b><p>${escapeHtml(x.message)}</p>${reward}${link}</div>`;
+    }).join(''):'<div class="empty">No earning tasks available right now.</div>';
+  }catch(e){$('earnMoreItems').innerHTML='<div class="empty">Earning tasks unavailable.</div>';}
+}
+
+function statusLabel(s){const map={pending:'Pending',processing:'Processing',paid:'Paid',approved:'Paid',rejected:'Rejected'};return map[s]||String(s||'Pending');}
+function renderWithdrawals(rows){
+  const box=$('withdrawStatus');
+  if(!rows || !rows.length){box.innerHTML='<div class="empty">No withdrawals yet.</div>';return;}
+  box.innerHTML=rows.map(x=>{
+    const s=String(x.status||'pending').toLowerCase();
+    return `<div class="status-item"><div class="status-top"><span class="status-amount">₹${Number(x.amount).toFixed(2)}</span><span class="status-badge ${s}">${statusLabel(s)}</span></div><div class="status-meta">Withdrawal #${x.id} · ${escapeHtml(x.method||'Payout')} · ${escapeHtml(x.value||'')}</div></div>`;
+  }).join('');
+}
+async function load(){
+  try{
+    const r=await fetch('/api/me',{headers:headers()}); const d=await r.json();
+    if(!r.ok){ $('userName').textContent='Open inside Telegram'; return; }
+    DATA=d;
+    renderWithdrawals(d.withdrawals||[]);
+    const full=(d.user.first_name||'User')+(d.user.username?' @'+d.user.username:'');
+    $('userName').textContent=full;
+    $('initials').textContent=(d.user.first_name||'U').slice(0,1).toUpperCase();
+    $('balance').textContent=Number(d.balance).toFixed(2);
+    $('earned').textContent=Number(d.total_earned).toFixed(2);
+    $('refs').textContent=d.referrals;
+    $('reward').textContent=d.reward;
+    $('min').textContent=d.min_withdrawal;
+    $('ref').value=d.referral_link;
+    $('method').value=d.payout_method||'UPI';
+    $('payout').value=d.payout_value||'';
+    const pm=payoutText(d.payout_method,d.payout_value);
+    $('payoutPreview').textContent=pm.text; $('payoutPreview').className=pm.cls; $('payoutIcon').textContent=pm.icon;
+    const pct=Math.min(100,Number(d.referrals)*10);
+    $('progress').style.width=Math.max(6,pct)+'%';
+    $('progressText').textContent=d.referrals+' successful referral'+(d.referrals==1?'':'s');
+    $('tx').innerHTML=(d.transactions||[]).map(x=>`<div class="tx"><span>${x.type}</span><b>${x.amount>=0?'+':''}₹${Number(x.amount).toFixed(2)}</b></div>`).join('') || '<div class="empty">No activity yet</div>';
+  }catch(e){ $('userName').textContent='Connection error'; }
+  loadLeaderboard();
+  loadEarnMore();
+}
+$('share').onclick=()=>{
+  const u=encodeURIComponent($('ref').value);
+  tg?.openTelegramLink(`https://t.me/share/url?url=${u}&text=${encodeURIComponent('Join BotByte and start earning!')}`);
+};
+$('savePayout').onclick=async()=>{
+  const value=$('payout').value.trim(), method=$('method').value;
+  const r=await fetch('/api/payout',{method:'POST',headers:headers(),body:JSON.stringify({method,value})});
+  const d=await r.json().catch(()=>({}));
+  $('pmsg').textContent=r.ok?'✓ Payout method saved':'✕ '+(d.detail||'Failed');
+  if(r.ok){const pm=payoutText(method,value);$('payoutPreview').textContent=pm.text;$('payoutPreview').className=pm.cls;$('payoutIcon').textContent=pm.icon;tg?.HapticFeedback?.notificationOccurred('success');}
+};
+$('refreshPayout').onclick=async()=>{
+  const b=$('refreshPayout'); b.disabled=true; b.textContent='…';
+  try{await load();$('pmsg').textContent='✓ Payout status refreshed.';}finally{b.disabled=false;b.textContent='↻';}
+};
+$('withdraw').onclick=async()=>{
+  const r=await fetch('/api/withdraw',{method:'POST',headers:headers(),body:JSON.stringify({amount:$('amount').value})});
+  $('wmsg').textContent=r.ok?'✓ Withdrawal request submitted':'✕ '+((await r.json()).detail||'Failed');
+  if(r.ok){$('amount').value='';load();}
+};
+$('redeem').onclick=async()=>{
+  const code=$('code').value.trim(); if(!code){$('gmsg').textContent='✕ Enter a gift code';return;}
+  $('redeem').disabled=true;
+  try{
+    const r=await fetch('/api/gift',{method:'POST',headers:headers(),body:JSON.stringify({code})});
+    const d=await r.json().catch(()=>({}));
+    $('gmsg').textContent=r.ok?'✓ Gift code claimed successfully.':'✕ '+(d.detail||'Failed');
+    if(r.ok){$('code').value='';showRedeemSuccess(d.amount||0);load();}
+  }finally{$('redeem').disabled=false;}
+};
+document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+if(document.getElementById('historyList')) loadHistory();
+load();
+setInterval(()=>{load();loadLeaderboard();loadEarnMore();}, 15000);
+</script>
+
+</body>
+</html>
