@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Refer & Earn</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Hind:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #050706;
+    --surface: #0B0F0C;
+    --surface-2: #111813;
+    --line: #1D2A20;
+    --gold: #22C55E;
+    --gold-2: #16A34A;
+    --gold-soft: rgba(34,197,94,0.14);
+    --emerald: #22C55E;
+    --emerald-soft: rgba(34,197,94,0.14);
+    --danger: #E5573F;
+    --danger-soft: rgba(229,87,63,0.14);
+    --text: #E8F5EA;
+    --muted: #8FA095;
+    --muted-2: #53635A;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:
+      radial-gradient(90% 60% at 50% -10%, rgba(34,197,94,0.08), transparent 60%),
+      var(--bg);
+    color: var(--text);
+    font-family: 'Hind', sans-serif;
+    min-height: 100vh;
+    display:flex; justify-content:center;
+  }
+  .app{ width:100%; max-width:440px; min-height:100vh; padding: 16px 16px 96px; position:relative; }
+
+  /* ---------------- Top bar ---------------- */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+  .profile{ display:flex; align-items:center; gap:11px; min-width:0; }
+  .avatar-ring{
+    width:42px; height:42px; border-radius:50%; flex-shrink:0;
+    background: linear-gradient(150deg, var(--gold), var(--gold-2));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:15px; color:#20140A;
+    position:relative;
+  }
+  .avatar-ring::after{
+    content:''; position:absolute; bottom:-1px; right:-1px;
+    width:11px; height:11px; border-radius:50%; background:var(--emerald);
+    border:2px solid var(--bg);
+  }
+  .profile-name{ font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .profile-sub{ font-size:11.5px; color:var(--muted); margin-top:1px; }
+  .top-actions{ display:flex; gap:8px; flex-shrink:0; }
+  .icon-btn{
+    width:38px; height:38px; border-radius:50%;
+    background: var(--surface); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px; cursor:pointer; color:var(--text);
+    transition: transform .12s ease, border-color .15s ease;
+  }
+  .icon-btn:active{ transform: scale(0.9); }
+  .icon-btn.muted{ color: var(--muted-2); border-color: var(--line); }
+
+  /* ---------------- Shared cards ---------------- */
+  .card{
+    background: var(--surface); border:1px solid var(--line);
+    border-radius: 20px; padding: 18px; position:relative; overflow:hidden;
+  }
+  .section{ margin-top:16px; }
+  .section:first-child{ margin-top:0; }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; }
+  .section-title{ font-family:'Baloo 2',sans-serif; font-weight:700; font-size:14.5px; letter-spacing:0.2px; }
+  .section-link{ font-size:11.5px; color:var(--gold); font-weight:600; cursor:pointer; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:10.5px; font-weight:700; letter-spacing:0.6px;
+    padding: 5px 11px; border-radius:20px;
+  }
+  .eyebrow.live{ background: var(--emerald-soft); color: var(--emerald); }
+  .eyebrow-dot{ width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+  .btn{
+    border:none; border-radius:14px; padding:13px 14px;
+    font-family:'Hind', sans-serif; font-weight:700; font-size:14px;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px;
+    transition: transform .12s ease, filter .12s ease;
+  }
+  .btn:active{ transform: scale(0.96); }
+  .btn-gold{ background: linear-gradient(135deg, var(--gold), var(--gold-2)); color:#20140A; box-shadow: 0 8px 20px rgba(232,184,75,0.18);}
+  .btn-ghost{ background: var(--surface-2); color: var(--text); border:1px solid var(--line); }
+  .btn-block{ width:100%; }
+
+  /* ---------------- HOME ---------------- */
+  .balance-card{ text-align:left; }
+  .balance-label{ font-size:12px; color:var(--muted); font-weight:500; }
+  .balance-amount{
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:38px; margin-top:4px;
+    display:flex; align-items:baseline; gap:2px;
+  }
+  .balance-amount .cur{ font-size:24px; color: var(--gold); }
+  .balance-row{ display:flex; gap:10px; margin-top:16px; }
+  .bank-row{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:14px; padding-top:14px; border-top:1px solid var(--line);
+  }
+  .bank-left{ display:flex; align-items:center; gap:10px; }
+  .bank-icon{
+    width:34px; height:34px; border-radius:10px; background:var(--surface-2);
+    display:flex; align-items:center; justify-content:center; font-size:15px;
+  }
+  .bank-tag{ font-size:10.5px; color:var(--muted); }
+  .bank-val{ font-size:13px; font-weight:600; margin-top:1px; }
+  .chip-btn{
+    background: var(--surface-2); border:1px solid var(--line); color:var(--text);
+    font-size:11.5px; font-weight:700; padding:7px 12px; border-radius:10px; cursor:pointer;
+  }
+
+  .funds-card{ margin-top:12px; }
+  .funds-head{ display:flex; align-items:center; justify-content:space-between; }
+  .funds-left{ display:flex; align-items:center; gap:9px; font-size:12px; color:var(--muted); font-weight:600; letter-spacing:0.4px;}
+  .funds-icon{ width:26px; height:26px; border-radius:8px; background:var(--gold-soft); display:flex; align-items:center; justify-content:center; font-size:12px; }
+  .funds-pct{ font-size:10.5px; font-weight:700; color:var(--emerald); background:var(--emerald-soft); padding:4px 10px; border-radius:20px; }
+  .funds-bar-bg{ height:8px; border-radius:20px; background:var(--surface-2); margin-top:12px; overflow:hidden; }
+  .funds-bar-fill{ height:100%; border-radius:20px; background: linear-gradient(90deg, var(--gold-2), var(--gold)); width:0%; transition: width 1.1s cubic-bezier(.2,.8,.2,1); }
+  .funds-foot{ display:flex; justify-content:space-between; margin-top:10px; font-size:11.5px; color:var(--muted); }
+  .funds-foot b{ color:var(--text); font-family:'JetBrains Mono',monospace; font-size:12px; }
+
+  .bonus-card{ margin-top:12px; }
+  .bonus-amount{ font-family:'Baloo 2',sans-serif; font-weight:800; font-size:26px; margin-top:10px; }
+  .bonus-cap{ font-size:11px; color:var(--muted); margin-top:2px; letter-spacing:0.3px; }
+  .link-box{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background: var(--surface-2); border:1px solid var(--line); border-radius:13px;
+    padding: 12px 12px; margin-top:14px;
+  }
+  .link-text{ min-width:0; }
+  .link-tag{ font-size:10px; color:var(--muted); letter-spacing:0.4px; }
+  .link-val{ font-family:'JetBrains Mono',monospace; font-size:12.5px; font-weight:600; color: var(--gold);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; max-width:230px; }
+  .link-note{ font-size:10px; color:var(--muted-2); margin-top:2px; }
+  .copy-sq{
+    width:36px; height:36px; border-radius:10px; background: var(--gold-soft); color:var(--gold);
+    border:1px solid rgba(34,197,94,0.3); display:flex; align-items:center; justify-content:center;
+    font-size:14px; cursor:pointer; flex-shrink:0; transition: all .15s ease;
+  }
+  .copy-sq.done{ background: var(--emerald-soft); color: var(--emerald); border-color: rgba(47,190,143,0.35); }
+
+  .bonus-actions{ display:flex; gap:10px; margin-top:14px; }
+  .stat-pair{ display:flex; gap:10px; margin-top:14px; }
+  .stat-box{ flex:1; background: var(--surface-2); border:1px solid var(--line); border-radius:14px; padding:12px; text-align:center; }
+  .stat-num{ font-family:'Baloo 2',sans-serif; font-weight:800; font-size:19px; }
+  .stat-label{ font-size:10px; color:var(--muted); margin-top:3px; display:flex; align-items:center; justify-content:center; gap:4px; }
+
+  .notice{
+    display:flex; gap:11px; margin-top:16px; padding:14px;
+    background: var(--danger-soft); border:1px solid rgba(229,87,63,0.3); border-radius:16px;
+  }
+  .notice-ic{ font-size:16px; flex-shrink:0; }
+  .notice-title{ color:var(--danger); font-weight:700; font-size:12.5px; }
+  .notice-body{ font-size:11.5px; color:var(--muted); margin-top:3px; line-height:1.4; }
+
+  .activity-card{ background:var(--surface); border:1px solid var(--line); border-radius:18px; overflow:hidden; margin-top:10px; }
+  .activity-row{ display:flex; align-items:center; gap:12px; padding:13px 16px; }
+  .activity-row + .activity-row{ border-top:1px solid var(--line); }
+  .avatar{ width:32px; height:32px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2',sans-serif; font-weight:700; font-size:12px; color:#fff; }
+  .activity-info{ flex:1; min-width:0; }
+  .activity-name{ font-size:12.5px; font-weight:600; }
+  .activity-time{ font-size:10.5px; color:var(--muted); margin-top:1px; }
+  .activity-amt{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:12.5px; color:var(--emerald); }
+
+  /* ---------------- EARN ---------------- */
+  .earn-hero{ text-align:center; padding: 30px 18px 22px; }
+  .earn-glow{
+    width:74px; height:74px; border-radius:50%; margin: 0 auto 16px;
+    border:1.5px solid rgba(34,197,94,0.35); background: var(--gold-soft);
+    display:flex; align-items:center; justify-content:center; font-size:28px;
+  }
+  .earn-amount{ font-family:'Baloo 2',sans-serif; font-weight:800; font-size:42px;
+    background: linear-gradient(120deg, #FCE7B5, var(--gold) 55%, var(--gold-2));
+    -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .earn-cap{ margin-top:8px; }
+  .earn-link-card{ margin-top:18px; text-align:left; }
+  .earn-history-head{ display:flex; align-items:center; justify-content:space-between; margin-top:18px; margin-bottom:10px; }
+  .badge-count{ font-size:11px; color:var(--muted); background:var(--surface-2); border:1px solid var(--line); padding:4px 10px; border-radius:20px; }
+  .empty-state{ text-align:center; padding: 34px 20px; color:var(--muted); }
+  .empty-ghost{ font-size:34px; opacity:0.5; margin-bottom:8px; }
+  .empty-text{ font-size:12.5px; }
+
+  /* ---------------- GIFT ---------------- */
+  .gift-hero{ text-align:center; padding: 26px 10px 6px; }
+  .gift-icon{
+    width:78px; height:78px; border-radius:50%; margin:0 auto 18px;
+    border:1.5px solid rgba(34,197,94,0.35); background: var(--gold-soft);
+    display:flex; align-items:center; justify-content:center; font-size:32px;
+    animation: floaty 3.2s ease-in-out infinite;
+  }
+  .gift-title{ font-family:'Baloo 2',sans-serif; font-weight:800; font-size:24px; }
+  .gift-sub{ font-size:12.5px; color:var(--muted); margin-top:8px; line-height:1.5; max-width:280px; margin-left:auto; margin-right:auto; }
+  .gift-form{ margin-top:20px; }
+  .gift-form-row{ display:flex; gap:10px; }
+  .gift-input{
+    flex:1; background: var(--surface-2); border:1.5px solid var(--line); border-radius:14px;
+    padding: 13px 14px; color:var(--text); font-family:'JetBrains Mono',monospace; font-size:14px;
+    letter-spacing:1px; text-transform:uppercase; outline:none; transition: border-color .15s ease;
+  }
+  .gift-input::placeholder{ color:var(--muted-2); letter-spacing:0.5px; text-transform:none; font-family:'Hind',sans-serif; }
+  .gift-input.err{ border-color: var(--danger); animation: shake .35s ease; }
+  .gift-input.ok{ border-color: var(--emerald); }
+  .claim-btn{ padding: 13px 20px; }
+
+  .how-card{ margin-top:20px; }
+  .how-row{ display:flex; gap:13px; padding: 10px 0; align-items:flex-start; }
+  .how-num{
+    width:24px; height:24px; border-radius:50%; background: var(--gold-soft); color:var(--gold);
+    font-weight:700; font-size:11.5px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
+  }
+  .how-text{ font-size:12.5px; color:var(--muted); line-height:1.5; }
+  .how-text b{ color: var(--text); }
+
+  /* ---------------- RANK ---------------- */
+  .rank-hero{ text-align:center; padding: 10px 0 6px; }
+  .rank-title{ font-family:'Baloo 2',sans-serif; font-weight:800; font-size:25px; letter-spacing:0.3px; }
+  .rank-title span{ color: var(--gold); }
+  .rank-sub{ font-size:11px; color:var(--muted); letter-spacing:1.5px; margin-top:4px; font-weight:600; }
+
+  .podium{ display:flex; align-items:flex-end; justify-content:center; gap:10px; margin-top:22px; }
+  .podium-item{ text-align:center; flex:1; max-width:120px; }
+  .podium-crown{ font-size:20px; margin-bottom:4px; }
+  .podium-avatar{
+    width:52px; height:52px; border-radius:16px; margin: 0 auto 8px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo 2',sans-serif; font-weight:800; font-size:19px; color:#0A0A0C;
+    opacity:0; transform: translateY(14px) scale(0.8);
+    animation: rise-pop .5s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  .podium-item.p1 .podium-avatar{ background: linear-gradient(150deg, var(--gold), var(--gold-2)); width:60px; height:60px; font-size:22px; box-shadow: 0 0 0 5px var(--gold-soft); animation-delay:.15s; }
+  .podium-item.p2 .podium-avatar{ background: linear-gradient(150deg, #C9CBD6, #8B8E9E); animation-delay:.3s; }
+  .podium-item.p3 .podium-avatar{ background: linear-gradient(150deg, #E0A6E8, #A566AD); animation-delay:.45s; }
+  .podium-id{ font-family:'JetBrains Mono',monospace; font-size:9.5px; color:var(--muted); }
+  .podium-pos{ display:inline-block; font-size:9.5px; font-weight:700; background:var(--surface-2); padding:2px 7px; border-radius:10px; margin-top:4px; }
+  .podium-invites{ font-family:'Baloo 2',sans-serif; font-weight:800; font-size:19px; margin-top:6px; }
+  .podium-invites-label{ font-size:9px; color:var(--muted); letter-spacing:0.5px; }
+  .podium-item.p1 .podium-invites{ color: var(--gold); font-size:22px; }
+
+  .rank-list{ margin-top:22px; display:flex; flex-direction:column; gap:9px; }
+  .rank-row{
+    display:flex; align-items:center; gap:12px; background:var(--surface);
+    border:1px solid var(--line); border-radius:15px; padding: 12px 14px;
+  }
+  .rank-pos{ font-size:11.5px; color:var(--muted); font-weight:700; width:24px; }
+  .rank-av{ width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-family:'Baloo 2',sans-serif; font-size:13px; }
+  .rank-id{ flex:1; font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--muted); }
+  .rank-refs{ text-align:right; }
+  .rank-refs b{ font-family:'Baloo 2',sans-serif; font-size:15px; }
+  .rank-refs-label{ font-size:9px; color:var(--muted); letter-spacing:0.5px; }
+
+  /* ---------------- Tab views ---------------- */
+  .view{ display:none; animation: fadein .28s ease; }
+  .view.active{ display:block; }
+  @keyframes fadein{ from{ opacity:0; transform: translateY(6px);} to{ opacity:1; transform:translateY(0);} }
+
+  /* ---------------- Bottom nav ---------------- */
+  .bottom-nav{
+    position:fixed; bottom:14px; left:50%; transform: translateX(-50%);
+    width: calc(100% - 32px); max-width:408px;
+    background: rgba(19,19,23,0.92); backdrop-filter: blur(14px);
+    border:1px solid var(--line); border-radius:22px;
+    display:flex; padding:8px; gap:4px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+  }
+  .nav-item{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+    padding: 9px 4px 7px; border-radius:16px; cursor:pointer; color:var(--muted-2);
+    transition: color .2s ease, background .2s ease;
+    position:relative;
+  }
+  .nav-item .ic{ font-size:18px; }
+  .nav-item .lb{ font-size:10px; font-weight:700; letter-spacing:0.3px; }
+  .nav-item.active{ color: var(--gold); background: var(--gold-soft); }
+  .nav-dot{ position:absolute; top:5px; right:22%; width:5px; height:5px; border-radius:50%; background: var(--emerald); opacity:0; transition: opacity .2s ease; }
+  .nav-item.active .nav-dot{ opacity:1; }
+
+  /* ---------------- Misc ---------------- */
+  .toast{
+    position:fixed; bottom:96px; left:50%; transform: translateX(-50%) translateY(16px);
+    background: var(--surface-2); border:1px solid var(--line); color:var(--text);
+    padding: 11px 20px; border-radius: 30px; font-size:12.5px; font-weight:600;
+    opacity:0; pointer-events:none; transition: all .28s cubic-bezier(.2,.8,.2,1); z-index:80;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.4); display:flex; align-items:center; gap:8px; white-space:nowrap;
+  }
+  .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+  .toast.err{ border-color: rgba(229,87,63,0.4); color:#FFD3CB; }
+  .toast.ok{ border-color: rgba(47,190,143,0.4); color:#C9F5E6; }
+
+  .confetti{ position:fixed; inset:0; pointer-events:none; z-index:70; overflow:hidden; }
+  .confetti span{
+    position:absolute; top:-10%; border-radius:2px;
+    animation: fall linear forwards;
+  }
+
+  @keyframes rise-pop{ to{ opacity:1; transform: translateY(0) scale(1); } }
+  @keyframes floaty{ 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-6px);} }
+  @keyframes shake{ 0%,100%{ transform: translateX(0);} 25%{ transform: translateX(-6px);} 75%{ transform: translateX(6px);} }
+  @keyframes fall{ to{ transform: translateY(115vh) rotate(360deg); opacity:0.3; } }
+
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; } }
+
+/* ===== v2 feature styles ===== */
+:root{
+  --page-glow: rgba(34,197,94,0.08);
+}
+body{
+  background:
+    radial-gradient(90% 60% at 50% -10%, var(--page-glow), transparent 60%),
+    var(--bg);
+}
+
+.profile-photo{
+  width:42px;height:42px;border-radius:50%;object-fit:cover;display:none;
+  border:2px solid var(--gold);background:var(--surface-2);
+}
+.profile-photo.show{display:block}.avatar-ring.photo-hidden{display:flex}
+.profile-sub{display:none!important}
+.top-actions{align-items:center}
+.icon-btn.refreshing{animation:spin .7s linear}
+@keyframes spin{to{transform:rotate(360deg)}}
+.feature-notice{
+  margin-top:12px;padding:12px 14px;border-radius:15px;
+  background:var(--gold-soft);border:1px solid rgba(34,197,94,.25);
+  font-size:11.5px;color:var(--muted);display:none;
+}
+.feature-notice.show{display:block}
+.force-join{margin-top:12px}
+.force-join .join-title{font-family:'Baloo 2',sans-serif;font-size:16px;font-weight:800}
+.force-join .join-sub{font-size:11.5px;color:var(--muted);margin:4px 0 12px}
+.join-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.join-row{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);padding:9px 10px;border-radius:12px}
+.join-row .join-name{flex:1;font-size:12px;font-weight:700}
+.join-row .join-status{font-size:10px;color:var(--muted)}
+.theme-toggle{font-size:14px}
+.rank-hof{
+  margin-top:18px;padding:13px;border-radius:16px;
+  background:linear-gradient(135deg,var(--gold-soft),transparent);
+  border:1px solid rgba(34,197,94,.22);text-align:center;font-size:11px;color:var(--muted)
+}
+.emoji-btn{font-family:inherit}
+
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ================= TOP BAR ================= -->
+  <div class="topbar">
+    <div class="profile">
+      <img class="profile-photo" id="profilePhoto" alt="Telegram profile photo">
+      <div class="avatar-ring" id="avatarInit">YO</div>
+      <div style="min-width:0;">
+        <div class="profile-name" id="profileName">Your Name</div>
+        <div class="profile-sub">@your_username</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="icon-btn" id="refreshBtn" title="Refresh">↻</div>
+      <div class="icon-btn theme-toggle" id="themeToggle" title="Theme">☾</div>
+      <div class="icon-btn" id="soundToggle" title="Sound">🔊</div>
+    </div>
+  </div>
+
+  <!-- ================= HOME ================= -->
+  <div class="view active" id="view-home">
+
+    <div class="card force-join" id="forceJoinCard" style="display:none;">
+      <div class="join-title">🔒 Channel Join Required</div>
+      <div class="join-sub">Join the required channels before claiming rewards or withdrawing.</div>
+      <div class="join-list" id="joinList"></div>
+      <button class="btn btn-gold btn-block" id="verifyJoinBtn">✓ VERIFY JOIN</button>
+    </div>
+
+    <div class="card balance-card">
+      <span class="eyebrow live"><span class="eyebrow-dot"></span>SYSTEM LIVE</span>
+      <div class="balance-label" style="margin-top:14px;">Available Balance</div>
+      <div class="balance-amount"><span class="cur">₹</span><span id="homeBalance">0.00</span></div>
+      <div class="balance-row">
+        <button class="btn btn-gold btn-block" id="withdrawBtn">WITHDRAW NOW ↗</button>
+      </div>
+      <div class="bank-row">
+        <div class="bank-left">
+          <div class="bank-icon">🏦</div>
+          <div>
+            <div class="bank-tag">LINKED BANK ACCOUNT</div>
+            <div class="bank-val">Not Linked</div>
+          </div>
+        </div>
+        <button class="chip-btn" id="changeBankBtn">CHANGE</button>
+      </div>
+    </div>
+
+    <div class="card funds-card">
+      <div class="funds-head">
+        <div class="funds-left"><span class="funds-icon">⚡</span>SYSTEM FUNDS</div>
+        <span class="funds-pct">78.7% LEFT</span>
+      </div>
+      <div class="funds-bar-bg"><div class="funds-bar-fill" id="fundsBar"></div></div>
+      <div class="funds-foot">
+        <span>AVAILABLE <b>₹7.9k</b></span>
+        <span>DISTRIBUTED <b>₹2.1k</b></span>
+      </div>
+    </div>
+
+    <div class="card bonus-card">
+      <span class="eyebrow live"><span class="eyebrow-dot"></span>ACTIVE REFERRAL BONUS</span>
+      <div class="bonus-amount">₹3</div>
+      <div class="bonus-cap">PER SUCCESSFUL INVITE</div>
+
+      <div class="link-box">
+        <div class="link-text">
+          <div class="link-tag">YOUR NETWORK LINK</div>
+          <span class="link-val" id="homeLink">t.me/yourBotUsername?start=...</span>
+          <div class="link-note">Set your bot username in CONFIG</div>
+        </div>
+        <div class="copy-sq" data-copy-target="fullLink">⧉</div>
+      </div>
+
+      <div class="bonus-actions">
+        <button class="btn btn-gold" style="flex:1;" id="inviteBtnHome">➤ INVITE FRIENDS</button>
+        <button class="icon-btn" id="shareBtnHome" style="width:46px;height:46px;">↗</button>
+      </div>
+
+      <div class="stat-pair">
+        <div class="stat-box"><div class="stat-num" id="homeRefs">0</div><div class="stat-label">👥 REFERS</div></div>
+        <div class="stat-box"><div class="stat-num" id="homeIncome">₹0.00</div><div class="stat-label">💰 INCOME</div></div>
+      </div>
+
+      <div class="notice">
+        <div class="notice-ic">⚠️</div>
+        <div>
+          <div class="notice-title">IMPORTANT NOTICE</div>
+          <div class="notice-body">Fake referrals or automation tools may result in account suspension.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">Recent Activity</div>
+        <div class="section-link" id="viewAllBtn">View All</div>
+      </div>
+      <div class="activity-card" id="homeActivity"></div>
+    </div>
+  </div>
+
+  <!-- ================= EARN ================= -->
+  <div class="view" id="view-earn">
+    <div class="card earn-hero">
+      <div class="earn-glow">👤</div>
+      <div class="earn-amount">₹3</div>
+      <span class="eyebrow live earn-cap"><span class="eyebrow-dot"></span>PER VALID INVITE</span>
+
+      <div class="link-box earn-link-card">
+        <div class="link-text">
+          <div class="link-tag">YOUR REFERRAL LINK</div>
+          <span class="link-val" id="earnLink">t.me/yourBotUsername?start=...</span>
+        </div>
+        <div class="copy-sq" data-copy-target="fullLink">⧉</div>
+      </div>
+
+      <button class="btn btn-gold btn-block" style="margin-top:14px;" id="shareBtnEarn">➤ SHARE ON TELEGRAM</button>
+    </div>
+
+    <div class="earn-history-head">
+      <div class="section-title">📜 HISTORY</div>
+      <span class="badge-count" id="historyCount">0 Total</span>
+    </div>
+    <div class="card" id="earnHistoryCard">
+      <div class="empty-state">
+        <div class="empty-ghost">👻</div>
+        <div class="empty-text">No referrals yet — share your link to get started</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= GIFT ================= -->
+  <div class="view" id="view-gift">
+    <div class="gift-hero">
+      <div class="gift-icon">🎁</div>
+      <div class="gift-title">Redeem Gift Code</div>
+      <div class="gift-sub">Enter your code below and get the reward instantly.</div>
+    </div>
+
+    <div class="card gift-form">
+      <div class="link-tag" style="margin-bottom:8px;">GIFT CODE</div>
+      <div class="gift-form-row">
+        <input class="gift-input" id="giftInput" placeholder="e.g. WELCOME3" maxlength="20">
+        <button class="btn btn-gold claim-btn" id="claimBtn">CLAIM</button>
+      </div>
+    </div>
+
+    <div class="card how-card">
+      <div class="section-title" style="margin-bottom:2px;">HOW IT WORKS</div>
+      <div class="how-row">
+        <div class="how-num">1</div>
+        <div class="how-text">Get a gift code from our <b>Telegram channel</b> or a special event.</div>
+      </div>
+      <div class="how-row">
+        <div class="how-num">2</div>
+        <div class="how-text">Enter the code above and press <b>CLAIM</b>.</div>
+      </div>
+      <div class="how-row">
+        <div class="how-num">3</div>
+        <div class="how-text">The reward will be added to your account instantly.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= RANK ================= -->
+  <div class="view" id="view-rank">
+    <div class="rank-hero">
+      <div class="rank-title">HALL OF <span>FAME</span></div>
+      <div class="rank-sub">TOP PROMOTERS</div>
+    </div>
+
+    <div class="podium">
+      <div class="podium-item p2">
+        <div class="podium-avatar">8</div>
+        <div class="podium-id">87*****413</div>
+        <div class="podium-pos">#2</div>
+        <div class="podium-invites">32</div>
+        <div class="podium-invites-label">INVITES</div>
+      </div>
+      <div class="podium-item p1">
+        <div class="podium-crown">👑</div>
+        <div class="podium-avatar">6</div>
+        <div class="podium-id">65*****289</div>
+        <div class="podium-pos">#1</div>
+        <div class="podium-invites">403</div>
+        <div class="podium-invites-label">INVITES</div>
+      </div>
+      <div class="podium-item p3">
+        <div class="podium-avatar">6</div>
+        <div class="podium-id">69*****943</div>
+        <div class="podium-pos">#3</div>
+        <div class="podium-invites">15</div>
+        <div class="podium-invites-label">INVITES</div>
+      </div>
+    </div>
+
+    <div class="rank-list">
+      <div class="rank-row">
+        <div class="rank-pos">#4</div>
+        <div class="rank-av" style="background:#D9534F;">6</div>
+        <div class="rank-id">60*****801</div>
+        <div class="rank-refs"><b>11</b><div class="rank-refs-label">REFERS</div></div>
+      </div>
+      <div class="rank-row">
+        <div class="rank-pos">#5</div>
+        <div class="rank-av" style="background:#4A90D9;">8</div>
+        <div class="rank-id">85*****834</div>
+        <div class="rank-refs"><b>7</b><div class="rank-refs-label">REFERS</div></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= ADMIN PANEL ================= -->
+  <div class="view" id="view-admin">
+    <div class="section-head">
+      <div class="section-title">⚙️ ADMIN PANEL</div>
+      <div class="section-link" id="adminClose">Close</div>
+    </div>
+    <div class="card">
+      <div class="section-title">🔒 Force Channel Join</div>
+      <div class="how-text" style="margin-top:5px;">Add/remove channels and enable/disable them. Changes apply to all users after the backend API saves them.</div>
+      <div id="adminChannels" style="margin-top:12px;"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <input class="gift-input" id="adminChannelInput" placeholder="@channel_username" maxlength="100">
+        <button class="btn btn-gold" id="adminAddChannel">ADD</button>
+      </div>
+      <button class="btn btn-gold btn-block" id="adminSaveChannels" style="margin-top:10px;">SAVE CHANNEL SETTINGS</button>
+    </div>
+    <div class="card section">
+      <div class="section-title">🔔 Notification Events</div>
+      <div class="how-text" style="margin-top:5px;">Balance Added, Referral Success, Withdrawal Processing, and Withdrawal Paid events can be sent through the backend bot notification API.</div>
+    </div>
+  </div>
+
+  <!-- ================= BOTTOM NAV ================= -->
+  <div class="bottom-nav">
+    <div class="nav-item active" data-tab="home"><div class="nav-dot"></div><span class="ic">🏠</span><span class="lb">HOME</span></div>
+    <div class="nav-item" data-tab="earn"><div class="nav-dot"></div><span class="ic">↗</span><span class="lb">EARN</span></div>
+    <div class="nav-item" data-tab="gift"><div class="nav-dot"></div><span class="ic">🎁</span><span class="lb">GIFT</span></div>
+    <div class="nav-item" data-tab="rank"><div class="nav-dot"></div><span class="ic">🏆</span><span class="lb">RANK</span></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="confetti" id="confetti"></div>
+</div>
+
+<script>
+/* =========================================================
+   🔧 CONFIG — Enter your details here
+   ========================================================= */
+const CONFIG = {
+  BOT_NAME: "Your Name",
+  BOT_USERNAME: "yourBotUsername",
+  REFERRAL_CODE: "REF" + Math.floor(1000 + Math.random()*9000),
+  PER_REFERRAL_REWARD: 3,
+  CURRENCY: "₹",
+  DEMO_BALANCE: 186,
+  DEMO_REFERS: 6,
+  VALID_GIFT_CODES: { "WELCOME3": 15, "REFERBONUS": 25 },
+
+  // Production backend integration:
+  // Set this to your bot/API server. The HTML alone cannot write to a shared DB.
+  API_BASE: "",
+  ADMIN_TOKEN: "",
+  FORCE_JOIN_CHANNELS: [
+    // { id:"-1001234567890", username:"mychannel", title:"My Channel", enabled:true }
+  ],
+  NOTIFICATIONS_ENABLED: true
+};
+
+const fullLink = `https://t.me/${CONFIG.BOT_USERNAME}?start=${CONFIG.REFERRAL_CODE}`;
+document.getElementById('homeLink').textContent = `t.me/${CONFIG.BOT_USERNAME}?start=${CONFIG.REFERRAL_CODE}`;
+document.getElementById('earnLink').textContent = `t.me/${CONFIG.BOT_USERNAME}?start=${CONFIG.REFERRAL_CODE}`;
+
+const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+if (tg) { tg.ready(); tg.expand(); }
+
+function haptic(style){
+  if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred(style || 'light');
+}
+function tgUser(){
+  return tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+}
+function initTelegramProfile(){
+  const u = tgUser();
+  const name = u ? [u.first_name, u.last_name].filter(Boolean).join(' ') : 'Your Name';
+  document.getElementById('profileName').textContent = name || 'Telegram User';
+  if(u && u.photo_url){
+    const img = document.getElementById('profilePhoto');
+    img.src = u.photo_url; img.classList.add('show');
+    document.getElementById('avatarInit').style.display = 'none';
+  } else {
+    const initials = (name || 'YO').split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+    document.getElementById('avatarInit').textContent = initials || 'YO';
+  }
+}
+function applyTheme(){
+  const theme = 'dark';
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem('referEarnTheme', theme);
+  document.getElementById('themeToggle').textContent = '☾';
+  if(tg && tg.setHeaderColor) tg.setHeaderColor('#050706');
+}
+applyTheme();
+initTelegramProfile();
+
+/* =========================================================
+   🔊 AUDIO ENGINE — procedural, no external files
+   ========================================================= */
+let audioCtx = null;
+let soundOn = true;
+function ctx(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function tone(freq, start, dur, type='sine', peak=0.18){
+  if(!soundOn) return;
+  const c = ctx();
+  const osc = c.createOscillator();
+  const gain = c.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, c.currentTime + start);
+  gain.gain.setValueAtTime(0, c.currentTime + start);
+  gain.gain.linearRampToValueAtTime(peak, c.currentTime + start + 0.012);
+  gain.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + start + dur);
+  osc.connect(gain); gain.connect(c.destination);
+  osc.start(c.currentTime + start);
+  osc.stop(c.currentTime + start + dur + 0.02);
+}
+function playClick(){ tone(720, 0, 0.05, 'square', 0.06); }
+function playTabSwitch(){ tone(480, 0, 0.06, 'sine', 0.05); tone(640, 0.04, 0.06, 'sine', 0.05); }
+function playCoin(){ tone(1100, 0, 0.09, 'triangle', 0.14); tone(1500, 0.06, 0.12, 'triangle', 0.12); }
+function playSuccess(){ tone(660, 0, 0.09, 'sine', 0.12); tone(880, 0.08, 0.09, 'sine', 0.12); tone(1180, 0.16, 0.14, 'sine', 0.12); }
+function playWhoosh(){
+  if(!soundOn) return;
+  const c = ctx();
+  const osc = c.createOscillator(); const gain = c.createGain();
+  osc.type='sawtooth';
+  osc.frequency.setValueAtTime(180, c.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(900, c.currentTime + 0.22);
+  gain.gain.setValueAtTime(0.001, c.currentTime);
+  gain.gain.linearRampToValueAtTime(0.05, c.currentTime + 0.05);
+  gain.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + 0.25);
+  osc.connect(gain); gain.connect(c.destination);
+  osc.start(); osc.stop(c.currentTime + 0.27);
+}
+function playError(){ tone(220, 0, 0.16, 'square', 0.09); tone(160, 0.1, 0.18, 'square', 0.08); }
+
+document.getElementById('themeToggle').addEventListener('click', ()=>{
+  haptic('light'); playClick();
+  applyTheme('dark');
+  showToast('Dark theme enabled', 'ok');
+});
+document.getElementById('refreshBtn').addEventListener('click', async function(){
+  this.classList.add('refreshing'); haptic('light'); playClick();
+  try {
+    const data = await syncBalance();
+    if(data && typeof data.balance === 'number') countTo(data.balance, false);
+    showToast('Data refreshed', 'ok');
+  } catch(e){ showToast('Refresh failed', 'err'); }
+  setTimeout(()=>this.classList.remove('refreshing'), 700);
+});
+
+document.getElementById('soundToggle').addEventListener('click', function(){
+  soundOn = !soundOn;
+  this.textContent = soundOn ? '🔊' : '🔇';
+  this.classList.toggle('muted', !soundOn);
+  if(soundOn){ ctx(); playClick(); }
+});
+// unlock audio context on first touch anywhere (mobile requirement)
+document.body.addEventListener('touchstart', ()=>{ ctx(); }, { once:true, passive:true });
+
+/* =========================================================
+   BACKEND / DATABASE API BRIDGE
+   ========================================================= */
+async function api(path, options={}){
+  if(!CONFIG.API_BASE) return null;
+  const headers = Object.assign({'Content-Type':'application/json'}, options.headers||{});
+  const u = tgUser();
+  if(tg && tg.initData) headers['X-Telegram-Init-Data'] = tg.initData;
+  if(CONFIG.ADMIN_TOKEN) headers['X-Admin-Token'] = CONFIG.ADMIN_TOKEN;
+  const res = await fetch(CONFIG.API_BASE.replace(/\/$/,'') + path, {...options, headers});
+  if(!res.ok) throw new Error('API '+res.status);
+  return res.json().catch(()=>({ok:true}));
+}
+async function notifyBot(type, data={}){
+  if(!CONFIG.NOTIFICATIONS_ENABLED || !CONFIG.API_BASE) return;
+  try { await api('/notifications/event', {method:'POST', body:JSON.stringify({type, data})}); }
+  catch(e){ console.warn('notification event failed', e); }
+}
+async function syncGiftClaim(code){
+  if(!CONFIG.API_BASE) return null;
+  return api('/gift/claim', {method:'POST', body:JSON.stringify({code})});
+}
+async function syncBalance(){
+  if(!CONFIG.API_BASE) return null;
+  return api('/me/balance');
+}
+async function verifyForceJoin(){
+  if(!CONFIG.API_BASE) return true;
+  const r = await api('/force-join/verify', {method:'POST', body:JSON.stringify({})});
+  return !!(r && (r.joined || r.ok));
+}
+function renderForceJoin(channels){
+  const enabled = (channels||[]).filter(c=>c && c.enabled !== false);
+  const card = document.getElementById('forceJoinCard');
+  const list = document.getElementById('joinList');
+  if(!enabled.length){ card.style.display='none'; return; }
+  card.style.display='block';
+  list.innerHTML = enabled.map(c => `
+    <div class="join-row">
+      <div>🔒</div><div class="join-name">${escapeHtml(c.title || '@'+(c.username||''))}</div>
+      <div class="join-status">REQUIRED</div>
+      <button class="chip-btn" onclick="openChannel('${encodeURIComponent(c.username||'')}')">JOIN</button>
+    </div>`).join('');
+}
+function openChannel(username){
+  if(!username) return;
+  const url = 'https://t.me/' + decodeURIComponent(username).replace(/^@/,'');
+  haptic('light');
+  if(tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url,'_blank');
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+const toastEl = document.getElementById('toast');
+let toastTimer = null;
+function showToast(msg, kind){
+  toastEl.textContent = msg;
+  toastEl.className = 'toast show' + (kind ? ' ' + kind : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> toastEl.classList.remove('show'), 1800);
+}
+
+/* =========================================================
+   CONFETTI (gold sparkle burst)
+   ========================================================= */
+function burstConfetti(){
+  const holder = document.getElementById('confetti');
+  const colors = ['#22C55E','#16A34A','#86EFAC','#F5F4F2'];
+  for(let i=0;i<26;i++){
+    const s = document.createElement('span');
+    const size = 5 + Math.random()*5;
+    s.style.left = Math.random()*100 + '%';
+    s.style.width = size+'px'; s.style.height = size+'px';
+    s.style.background = colors[Math.floor(Math.random()*colors.length)];
+    s.style.animationDuration = (1.4 + Math.random()*1.1) + 's';
+    s.style.animationDelay = (Math.random()*0.15)+'s';
+    holder.appendChild(s);
+    setTimeout(()=> s.remove(), 3000);
+  }
+}
+
+/* =========================================================
+   COPY TO CLIPBOARD
+   ========================================================= */
+function copyText(text){
+  if(navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text);
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  document.execCommand('copy'); document.body.removeChild(ta);
+  return Promise.resolve();
+}
+document.querySelectorAll('[data-copy-target]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    copyText(fullLink).then(()=>{
+      haptic('light'); playSuccess();
+      btn.classList.add('done');
+      btn.textContent = '✓';
+      showToast('Link copied', 'ok');
+      setTimeout(()=>{ btn.classList.remove('done'); btn.textContent='⧉'; }, 1400);
+    });
+  });
+});
+
+/* =========================================================
+   SHARE / INVITE
+   ========================================================= */
+function openShare(){
+  haptic('medium'); playWhoosh();
+  const text = `Join me and start earning! Earn ${CONFIG.CURRENCY}${CONFIG.PER_REFERRAL_REWARD} for every successful invite 💰`;
+  const tgShare = 'https://t.me/share/url?url=' + encodeURIComponent(fullLink) + '&text=' + encodeURIComponent(text);
+  if(tg && tg.openTelegramLink){ tg.openTelegramLink(tgShare); }
+  else { window.open(tgShare, '_blank'); }
+}
+document.getElementById('inviteBtnHome').addEventListener('click', openShare);
+document.getElementById('shareBtnHome').addEventListener('click', openShare);
+document.getElementById('shareBtnEarn').addEventListener('click', openShare);
+
+/* =========================================================
+   GENERIC BUTTON CLICK SOUND
+   ========================================================= */
+document.querySelectorAll('.btn, .icon-btn, .chip-btn, .section-link').forEach(el=>{
+  if(el.id === 'shareBtnHome' || el.id==='shareBtnEarn' || el.id==='inviteBtnHome' || el.id === 'soundToggle') return;
+  el.addEventListener('click', ()=> { haptic('light'); playClick(); });
+});
+document.getElementById('withdrawBtn').addEventListener('click', async ()=>{
+  try{
+    await notifyBot('withdrawal_processing', {balance:currentBalance});
+    showToast('Withdrawal processing notification sent', 'ok');
+  }catch(e){ showToast('Withdrawal will be available soon'); }
+});
+document.getElementById('changeBankBtn').addEventListener('click', ()=> showToast('Bank linking is coming soon'));
+document.getElementById('viewAllBtn').addEventListener('click', ()=> switchTab('earn'));
+
+/* =========================================================
+   GIFT CODE CLAIM
+   ========================================================= */
+const giftInput = document.getElementById('giftInput');
+document.getElementById('claimBtn').addEventListener('click', async ()=>{
+  const code = giftInput.value.trim().toUpperCase();
+  if(!code){
+    giftInput.classList.remove('ok'); giftInput.classList.add('err');
+    haptic('error'); playError(); showToast('Please enter a code', 'err');
+    setTimeout(()=> giftInput.classList.remove('err'), 400); return;
+  }
+  try{
+    let amt = CONFIG.VALID_GIFT_CODES[code] || 0;
+    const server = await syncGiftClaim(code);
+    if(CONFIG.API_BASE){
+      if(!server || !server.ok || typeof server.amount !== 'number'){
+        throw new Error((server && server.message) || 'Invalid gift code');
+      }
+      amt = server.amount;
+    } else if(!amt) throw new Error('Invalid gift code');
+
+    giftInput.classList.remove('err'); giftInput.classList.add('ok');
+    haptic('success'); playCoin(); burstConfetti();
+    bumpBalance(amt);
+    await notifyBot('balance_added', {amount:amt, source:'gift_code', code});
+    showToast(`${CONFIG.CURRENCY}${amt} has been added to your account!`, 'ok');
+    giftInput.value = '';
+    setTimeout(()=> giftInput.classList.remove('ok'), 900);
+  }catch(e){
+    giftInput.classList.remove('ok'); giftInput.classList.add('err');
+    haptic('error'); playError();
+    showToast(e.message === 'Invalid gift code' ? 'Invalid or already used code' : 'Gift claim failed', 'err');
+    setTimeout(()=> giftInput.classList.remove('err'), 400);
+  }
+});
+
+/* =========================================================
+   BALANCE COUNT-UP
+   ========================================================= */
+let currentBalance = 0;
+function setBalanceDisplay(v){
+  document.getElementById('homeBalance').textContent = v.toFixed(2);
+  document.getElementById('homeIncome').textContent = CONFIG.CURRENCY + v.toFixed(2);
+}
+function countTo(target, withSound){
+  const start = currentBalance;
+  const diff = target - start;
+  const dur = 700; const t0 = performance.now();
+  function step(t){
+    const p = Math.min(1, (t - t0)/dur);
+    const eased = 1 - Math.pow(1-p, 3);
+    currentBalance = start + diff*eased;
+    setBalanceDisplay(currentBalance);
+    if(p < 1) requestAnimationFrame(step);
+    else { currentBalance = target; setBalanceDisplay(target); }
+  }
+  requestAnimationFrame(step);
+  if(withSound) playCoin();
+}
+function bumpBalance(amount){ countTo(currentBalance + amount, true); }
+window.ReferEarnEvents = {
+  balanceAdded: (amount, source='system') => notifyBot('balance_added',{amount,source}),
+  referralSuccess: (referrerId, amount=CONFIG.PER_REFERRAL_REWARD) => notifyBot('referral_success',{referrerId,amount}),
+  withdrawalProcessing: (amount) => notifyBot('withdrawal_processing',{amount}),
+  withdrawalPaid: (amount, transactionId='') => notifyBot('withdrawal_paid',{amount,transactionId})
+};
+
+/* =========================================================
+   RECENT ACTIVITY (demo data)
+   ========================================================= */
+const activity = [
+  {name:'रिया शर्मा', time:'2 hours ago', amt:`+${CONFIG.CURRENCY}${CONFIG.PER_REFERRAL_REWARD}`, color:'#E97C7C'},
+  {name:'अमन वर्मा', time:'5 hours ago', amt:`+${CONFIG.CURRENCY}${CONFIG.PER_REFERRAL_REWARD}`, color:'#6FA8DC'},
+  {name:'पूजा यादव', time:'yesterday', amt:`+${CONFIG.CURRENCY}${CONFIG.PER_REFERRAL_REWARD}`, color:'#E8B84B'},
+  {name:'करण सिंह', time:'2 days ago', amt:`+${CONFIG.CURRENCY}${CONFIG.PER_REFERRAL_REWARD}`, color:'#2FBE8F'},
+];
+const homeActivity = document.getElementById('homeActivity');
+activity.forEach(a=>{
+  const row = document.createElement('div');
+  row.className = 'activity-row';
+  row.innerHTML = `<div class="avatar" style="background:${a.color}">${a.name.trim()[0]}</div>
+    <div class="activity-info"><div class="activity-name">${a.name} joined</div><div class="activity-time">${a.time}</div></div>
+    <div class="activity-amt">${a.amt}</div>`;
+  homeActivity.appendChild(row);
+});
+document.getElementById('homeRefs').textContent = CONFIG.DEMO_REFERS;
+
+/* =========================================================
+   TAB SWITCHING
+   ========================================================= */
+const views = { home:'view-home', earn:'view-earn', gift:'view-gift', rank:'view-rank', admin:'view-admin' };
+function switchTab(name){
+  document.querySelectorAll('.nav-item').forEach(n=> n.classList.toggle('active', n.dataset.tab === name));
+  Object.entries(views).forEach(([k, id])=>{
+    document.getElementById(id).classList.toggle('active', k === name);
+  });
+}
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click', ()=>{
+    haptic('light'); playTabSwitch();
+    switchTab(item.dataset.tab);
+  });
+});
+
+
+/* =========================================================
+   FORCE JOIN + ADMIN SETTINGS
+   ========================================================= */
+let adminChannels = Array.isArray(CONFIG.FORCE_JOIN_CHANNELS) ? [...CONFIG.FORCE_JOIN_CHANNELS] : [];
+function renderAdminChannels(){
+  const box = document.getElementById('adminChannels');
+  if(!box) return;
+  box.innerHTML = adminChannels.length ? adminChannels.map((c,i)=>`
+    <div class="join-row" data-i="${i}">
+      <div class="join-name">${escapeHtml(c.title || c.username || c.id)}</div>
+      <label class="join-status"><input type="checkbox" ${c.enabled!==false?'checked':''} onchange="adminChannels[${i}].enabled=this.checked"> enabled</label>
+      <button class="chip-btn" onclick="adminChannels.splice(${i},1);renderAdminChannels()">REMOVE</button>
+    </div>`).join('') : '<div class="empty-text">No channels configured.</div>';
+}
+document.getElementById('adminAddChannel')?.addEventListener('click', ()=>{
+  const v = document.getElementById('adminChannelInput').value.trim();
+  if(!v) return;
+  adminChannels.push({username:v.replace(/^@/,''), title:v, enabled:true});
+  document.getElementById('adminChannelInput').value='';
+  renderAdminChannels(); haptic('light'); playClick();
+});
+document.getElementById('adminSaveChannels')?.addEventListener('click', async ()=>{
+  try{
+    await api('/admin/force-join/channels', {method:'PUT', body:JSON.stringify({channels:adminChannels})});
+    showToast('Channel settings saved', 'ok');
+  }catch(e){ showToast(CONFIG.API_BASE ? 'Save failed' : 'Set API_BASE first', 'err'); }
+});
+document.getElementById('adminClose')?.addEventListener('click', ()=>switchTab('home'));
+
+async function initForceJoin(){
+  try{
+    let channels = adminChannels;
+    if(CONFIG.API_BASE){
+      const r = await api('/force-join/channels');
+      channels = r && Array.isArray(r.channels) ? r.channels : [];
+    }
+    renderForceJoin(channels);
+  }catch(e){ console.warn('force join load failed', e); }
+}
+
+
+let adminPressTimer=null;
+document.getElementById('profileName').addEventListener('pointerdown', ()=>{
+  adminPressTimer=setTimeout(()=>{ renderAdminChannels(); switchTab('admin'); }, 1200);
+});
+['pointerup','pointercancel','pointerleave'].forEach(ev=>document.getElementById('profileName').addEventListener(ev,()=>clearTimeout(adminPressTimer)));
+
+/* =========================================================
+   INIT — animate funds bar + balance on load
+   ========================================================= */
+window.addEventListener('load', ()=>{
+  setTimeout(()=>{ document.getElementById('fundsBar').style.width = '78.7%'; }, 250);
+  setTimeout(()=>{ countTo(CONFIG.DEMO_BALANCE, false); }, 350);
+  initForceJoin();
+  syncBalance().then(data=>{ if(data && typeof data.balance === 'number') countTo(data.balance,false); }).catch(()=>{});
+
+});
+</script>
+</body>
+</html>
