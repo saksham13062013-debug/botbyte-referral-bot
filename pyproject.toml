@@ -1,0 +1,17 @@
+[project]
+name = "botbyte-referral-bot"
+version = "0.1.0"
+description = "BotByte Referral Bot"
+requires-python = ">=3.13"
+dependencies = [
+    "aiogram<4,>=3.4",
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+    "python-dotenv>=1.0"
+]
+
+[dependency-groups]
+dev = [
+    "workers-py",
+    "workers-runtime-sdk"
+]
