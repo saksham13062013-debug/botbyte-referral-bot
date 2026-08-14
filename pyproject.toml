@@ -1,0 +1,14 @@
+[project]
+name = "botbyte-referral-bot"
+version = "0.1.0"
+description = "BotByte Cloudflare Python Worker"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.110"
+]
+
+[dependency-groups]
+dev = [
+    "workers-py",
+    "workers-runtime-sdk"
+]
