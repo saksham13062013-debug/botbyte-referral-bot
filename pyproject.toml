@@ -3,6 +3,7 @@ name = "botbyte-referral-bot"
 version = "0.1.0"
 description = "BotByte Referral Bot"
 requires-python = ">=3.13"
+
 dependencies = [
     "aiogram<4,>=3.4",
     "fastapi>=0.110",
